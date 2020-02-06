@@ -7,7 +7,7 @@ import torch.optim as optim
 import data
 
 class LSTM(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers, output_size,batch_size):
+    def __init__(self, input_size, hidden_size, num_layers, output_size, batch_size):
         super(LSTM, self).__init__()
         """
         
@@ -28,41 +28,46 @@ class LSTM(nn.Module):
         self.output_size = output_size
         self.batch_size = batch_size
         
-        self.hidden_cell = (torch.zeros(1,1,self.hidden_size),
-                            torch.zeros(1,1,self.hidden_size))
+#        self.hidden_cell = (torch.zeros(1,1,self.hidden_size),
+#                            torch.zeros(1,1,self.hidden_size))
         
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, self.num_layers)
         self.out = nn.Linear(hidden_size, output_size)
 
-    def forward(self, t):
+    def forward(self, t, hidden_state):
 
-        lstm_out, self.hidden_cell = self.lstm(t.view(len(t), self.batch_size,
-                                                 -1,self.hidden_cell))
-        predictions = self.linear(lstm_out.view(len(t), -1))
-        return predictions
+        lstm_out, self.hidden_state = self.lstm(t,hidden_state)
+        
+        output = self.linear(lstm_out.view(len(t), -1))
+        return output
         
 
 
 if __name__ == "__main__":
     
+    train_data_samples = data.X_train 
+    train_data_labels = data.y_train 
+    
     model = LSTM(input_size = 1, hidden_size = 100,
                  num_layers = 1, output_size = 1, batch_size = len(data.X_train[0]))
+    
     learning_rate = 0.001
-    num_epoch = 100
 
     loss_function = nn.MSELoss()
+    
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     
     epochs = 150
+    
+    hidden_state = None 
 
     for i in range(epochs):
-        for seq  in data.X_train[0]:
-            optimizer.zero_grad()
-            model.hidden_cell = (torch.zeros(1, 1, model.hidden_size),
-                            torch.zeros(1, 1, model.hidden_size))
-            y_pred = model(seq)
-    
-            single_loss = loss_function(y_pred, 1)
+        for seq in data.X_train:
+            optimizer.zero_grad() #Zeros the gradients parameters
+            output, hidden_state = model(seq, hidden_state) #Throws the data into the model
+            
+            #Backpropogation and optimization
+            single_loss = loss_function(output, train_data_labels[i])
             single_loss.backward()
             optimizer.step()
 
