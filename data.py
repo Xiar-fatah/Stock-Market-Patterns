@@ -7,12 +7,12 @@ import torch
 url = 'https://raw.githubusercontent.com/mwitiderrick/stockprice/master/NSE-TATAGLOBAL.csv'
 dataset_train = pd.read_csv(url)
 #Creating training dataset by extracting opening values of daa_set_train
-train_data = dataset_train.iloc[:, 1:2].values
+train_data_0 = dataset_train.iloc[:, 1:2].values
 
 #Machine learning models adapt better to values between 0 and 1
 from sklearn.preprocessing import MinMaxScaler
 sc = MinMaxScaler(feature_range = (0, 1))
-train_data_scaled = sc.fit_transform(train_data)
+train_data_scaled = sc.fit_transform(train_data_0)
 
 #The input for LSTM is a three dimensional tensor
 #Creating a data structure with 60 timesteps and 1 output
@@ -40,7 +40,7 @@ for i in range(60, len(train_data_scaled)):
 """
 #reshape into an numpy array
 #X_train, y_train = np.array(X_train), np.array(y_train) 
-X_train, y_train = torch.Tensor(X_train), torch.Tensor(y_train)
+X_train_tensor, y_train_tensor = torch.Tensor(X_train), torch.Tensor(y_train)
 #Reshaping into three dimensional tensor
 
 """
@@ -48,10 +48,18 @@ X_train, y_train = torch.Tensor(X_train), torch.Tensor(y_train)
     gives a new shape to an array without changing its data.
     X_train.shape[0], X_train.shape[1] = 60,1975
 """
-test = []
-for i in range(len(X_train)):
-    test.append((X_train[i,:],y_train[i]))
-print(len(test[1][0]))
+
+train_data = []
+for i in range(len(X_train_tensor)-100):
+    train_data.append((X_train_tensor[i,:],y_train_tensor[i]))
+test_data = []
+for i in range(len(X_train_tensor)-100, len(X_train_tensor)):
+    test_data.append((X_train_tensor[i,:],y_train_tensor[i]))
+    
+    """"
+    Skriv om hela denna sektion
+    """
+#print(test[0])
 #X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
 #X_train = torch.Tensor(X_train) 
 #y_train = torch.Tensor(y_train)

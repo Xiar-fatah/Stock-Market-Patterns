@@ -5,6 +5,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import data
+from sklearn.preprocessing import MinMaxScaler
+
 
 class LSTM(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, output_size,batch_size):
@@ -64,8 +66,8 @@ class LSTM(nn.Module):
         t = t.view(-1, self.hidden_size)
 #        print(t)
         t = self.linear(t)
-#        print(t)
         t = t[-1]
+#        print(t)
 #        print()
 #        raise ValueError('A very specific bad thing happened.')
         
@@ -84,19 +86,66 @@ if __name__ == "__main__":
     loss_function = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     
-    epochs = 150
+    epochs = 1
 
-    for i in range(epochs):
-        for samples, labels in data.test:
+    for epoch in range(epochs):
+        for seq, labels in data.train_data:
             optimizer.zero_grad()
 #            print(samples)
 #            print(labels)
-            output = model(samples)
+            output = model(seq)
 #            print(output)
-            loss = loss_function(output, labels)
+            loss = loss_function(output, torch.Tensor([labels]))
             loss.backward()
             optimizer.step()
-            if i % 25== 1:
-                print("Epoch: %d, loss: %1.5f" % (epochs, loss.item()))
+#            if epoch % 25 == 1:
+#                print("Epoch: %d, loss: %1.5f" % (epoch, loss.item()))
 
+    model.eval()
+    predictions = []
+    with torch.no_grad():
+        correct = 0
+        total = 0
+        for seq, labels in data.test_data:
+            output = model(seq)
+            predictions.append(output.item())
+    predictions = np.array(predictions)
+    predictions = data.sc.inverse_transform((predictions).reshape(-1, 1))
 
+    trained_val = np.linspace(0,len(data.train_data_0)-1,len(data.train_data_0))
+    test_val = np.linspace(1850,1949,100)
+
+    plt.figure()
+    plt.plot(trained_val,data.train_data_0,
+             test_val, predictions)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
