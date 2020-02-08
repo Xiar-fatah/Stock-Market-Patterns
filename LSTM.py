@@ -11,35 +11,55 @@ class LSTM(nn.Module):
         super(LSTM, self).__init__()
         """
         
-        input_size: The number of expected features in the input `x`, in our case it is 1,
+        input_size: The number of expected features in the input "x", in our case it is 1,
         the opening price.
         
-        hidden_size: The number of features in the hidden state `h`
+        hidden_size: The number of features in the hidden state "h"
         
-        num_layers: Number of recurrent layers. E.g., setting ``num_layers=2``
-            would mean stacking two LSTMs together to form a `stacked LSTM`,
+        num_layers: Number of recurrent layers. E.g., setting "num_layers=2"
+            would mean stacking two LSTMs together to form a "stacked LSTM",
             with the second LSTM taking in outputs of the first LSTM and
             computing the final results. Default: 1
             
+        more explanation
+            
         """
-        self.input_size = input_size
+        self.input_size = input_size #1 
         self.hidden_size = hidden_size #trial and error
         self.num_layers = num_layers #is a number between 1 and 3
-        self.output_size = output_size
-        self.batch_size = batch_size
-        
-        self.hidden_cell = (torch.zeros(1,1,self.hidden_size),
-                            torch.zeros(1,1,self.hidden_size))
+        self.output_size = output_size #1
+        self.batch_size = batch_size #60
         
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, self.num_layers)
-        self.out = nn.Linear(hidden_size, output_size)
+        self.linear = nn.Linear(hidden_size, output_size)
 
+    def hidden_cell(self):
+        """
+        h_0 of shape (num_layers * num_directions, batch, hidden_size):
+        tensor containing the initial hidden state for each element in the batch.
+        If the LSTM is bidirectional, num_directions should be 2, else it should be 1.
+
+        c_0 of shape (num_layers * num_directions, batch, hidden_size): 
+        tensor containing the initial cell state for each element in the batch.
+        
+        If (h_0, c_0) is not provided, both h_0 and c_0 default to zero.
+        """
+        h_0,c_0 = (torch.zeros(1,self.batch_size,self.hidden_size), 
+        torch.zeros(1,self.batch_size,self.hidden_size))
+        return h_0,c_0 
     def forward(self, t):
-
-        lstm_out, self.hidden_cell = self.lstm(t.view(len(t), self.batch_size,
-                                                 -1,self.hidden_cell))
-        predictions = self.linear(lstm_out.view(len(t), -1))
-        return predictions
+        """
+        output of shape (seq_len, batch, num_directions * hidden_size): 
+        tensor containing the output features (h_t) from the last layer of the LSTM, for each t. 
+        
+        h_n of shape (num_layers * num_directions, batch, hidden_size): tensor containing the hidden state for t = seq_len.
+                
+        c_n of shape (num_layers * num_directions, batch, hidden_size): tensor containing the cell state for t = seq_len.
+        """
+        
+        t, (h_n,c_n) = self.lstm(t, (self.hidden_cell()))
+        t = self.linear(t.view(-1, self.hidden_size))
+        return t
         
 
 
@@ -56,10 +76,9 @@ if __name__ == "__main__":
     epochs = 150
 
     for i in range(epochs):
-        for seq  in data.X_train[0]:
+        for seq in data.X_train:
             optimizer.zero_grad()
-            model.hidden_cell = (torch.zeros(1, 1, model.hidden_size),
-                            torch.zeros(1, 1, model.hidden_size))
+
             y_pred = model(seq)
     
             single_loss = loss_function(y_pred, 1)
