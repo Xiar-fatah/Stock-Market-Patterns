@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-
+import torch
 
 #Importing data
 url = 'https://raw.githubusercontent.com/mwitiderrick/stockprice/master/NSE-TATAGLOBAL.csv'
@@ -39,8 +39,8 @@ for i in range(60, len(train_data_scaled)):
     
 """
 #reshape into an numpy array
-X_train, y_train = np.array(X_train), np.array(y_train) 
-
+#X_train, y_train = np.array(X_train), np.array(y_train) 
+X_train, y_train = torch.Tensor(X_train), torch.Tensor(y_train)
 #Reshaping into three dimensional tensor
 
 """
@@ -48,7 +48,15 @@ X_train, y_train = np.array(X_train), np.array(y_train)
     gives a new shape to an array without changing its data.
     X_train.shape[0], X_train.shape[1] = 60,1975
 """
-X_train = np.reshape(X_train, (X_train.shape[1], X_train.shape[0], 1))
+test = []
+for i in range(len(X_train)):
+    test.append((X_train[i,:],y_train[i]))
+print(len(test[1][0]))
+#X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+#X_train = torch.Tensor(X_train) 
+#y_train = torch.Tensor(y_train)
+
+
 
 #Plot data
 #x = np.linspace(0,len(train_data)-1,len(train_data))

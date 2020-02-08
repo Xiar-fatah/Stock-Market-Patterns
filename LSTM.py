@@ -56,9 +56,20 @@ class LSTM(nn.Module):
                 
         c_n of shape (num_layers * num_directions, batch, hidden_size): tensor containing the cell state for t = seq_len.
         """
-        
+        #Reshape the input tensor to satisfy (seq_len, batch, input_size)
+        t = t.view(len(t),1, -1)
+#        print(t.shape)
         t, (h_n,c_n) = self.lstm(t, (self.hidden_cell()))
-        t = self.linear(t.view(-1, self.hidden_size))
+#        print(t.shape)
+        t = t.view(-1, self.hidden_size)
+#        print(t)
+        t = self.linear(t)
+#        print(t)
+        t = t[-1]
+#        print()
+#        raise ValueError('A very specific bad thing happened.')
+        
+
         return t
         
 
@@ -66,7 +77,7 @@ class LSTM(nn.Module):
 if __name__ == "__main__":
     
     model = LSTM(input_size = 1, hidden_size = 100,
-                 num_layers = 1, output_size = 1, batch_size = len(data.X_train[0]))
+                 num_layers = 1, output_size = 1, batch_size = 1)
     learning_rate = 0.001
     num_epoch = 100
 
@@ -76,13 +87,16 @@ if __name__ == "__main__":
     epochs = 150
 
     for i in range(epochs):
-        for seq in data.X_train:
+        for samples, labels in data.test:
             optimizer.zero_grad()
-
-            y_pred = model(seq)
-    
-            single_loss = loss_function(y_pred, 1)
-            single_loss.backward()
+#            print(samples)
+#            print(labels)
+            output = model(samples)
+#            print(output)
+            loss = loss_function(output, labels)
+            loss.backward()
             optimizer.step()
+            if i % 25== 1:
+                print("Epoch: %d, loss: %1.5f" % (epochs, loss.item()))
 
 
