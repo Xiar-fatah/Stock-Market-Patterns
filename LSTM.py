@@ -89,7 +89,8 @@ if __name__ == "__main__":
     epochs = 1
 
     for epoch in range(epochs):
-        for seq, labels in data.train_data:
+        running_loss = 0.0
+        for i (seq, labels) in data.train_data:
             optimizer.zero_grad()
 #            print(samples)
 #            print(labels)
@@ -98,9 +99,14 @@ if __name__ == "__main__":
             loss = loss_function(output, torch.Tensor([labels]))
             loss.backward()
             optimizer.step()
+            running_loss += loss.item()
+            if i % 1000 == 999:    # print every 2000 mini-batches
+                print('[%d, %5d] loss: %.3f' %
+                      (epoch + 1, i + 1, running_loss / 1000))
+                running_loss = 0.0
 #            if epoch % 25 == 1:
 #                print("Epoch: %d, loss: %1.5f" % (epoch, loss.item()))
-
+            
     model.eval()
     predictions = []
     with torch.no_grad():
@@ -112,8 +118,8 @@ if __name__ == "__main__":
     predictions = np.array(predictions)
     predictions = data.sc.inverse_transform((predictions).reshape(-1, 1))
 
-    trained_val = np.linspace(0,len(data.train_data_0)-1,len(data.train_data_0))
-    test_val = np.linspace(1850,1949,100)
+    trained_val = np.linspace(0,len(data.dataset)-1,len(data.dataset))
+    test_val = np.linspace(1935,2034,100)
 
     plt.figure()
     plt.plot(trained_val,data.train_data_0,
