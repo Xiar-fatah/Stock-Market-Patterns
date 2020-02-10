@@ -71,8 +71,12 @@ class LSTM(nn.Module):
         
 
         return t
-        
 
+##Add RMS & MAPE
+def RMS():
+    return 0
+def MAPE():
+    return 0
 
 if __name__ == "__main__":
     
@@ -94,7 +98,7 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
 
-        #Add: Print loss function for given epoch.
+        ##Add: Print loss function for given epoch.
 
     model.eval()
     predictions = []
@@ -109,6 +113,7 @@ if __name__ == "__main__":
     #Inverse the normalization
     predictions = data.sc.inverse_transform((predictions).reshape(-1, 1))
 
+    ##Add dates instead of numbers
     trained_val = np.linspace(0,len(data.dataset)-1,len(data.dataset))
     test_val = np.linspace(1935,2034,100)
 
@@ -117,7 +122,8 @@ if __name__ == "__main__":
              test_val, predictions)
         
         
-        
+    ##Plot MAPE and RMS
+    ##Plot Loss function for given epoch
         
         
         
