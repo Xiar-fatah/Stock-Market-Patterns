@@ -45,6 +45,8 @@ class LSTM(nn.Module):
         tensor containing the initial cell state for each element in the batch.
         
         If (h_0, c_0) is not provided, both h_0 and c_0 default to zero.
+        
+        In essence this function creates two empty tensors to pass into the modell.
         """
         h_0,c_0 = (torch.zeros(1,self.batch_size,self.hidden_size), 
         torch.zeros(1,self.batch_size,self.hidden_size))
@@ -58,18 +60,14 @@ class LSTM(nn.Module):
                 
         c_n of shape (num_layers * num_directions, batch, hidden_size): tensor containing the cell state for t = seq_len.
         """
-        #Reshape the input tensor to satisfy (seq_len, batch, input_size)
+        #Reshape the input tensor to satisfy (seq_len, batch, input_size) according to the docs
         t = t.view(len(t),1, -1)
-#        print(t.shape)
         t, (h_n,c_n) = self.lstm(t, (self.hidden_cell()))
-#        print(t.shape)
         t = t.view(-1, self.hidden_size)
-#        print(t)
         t = self.linear(t)
+        #Why t[-1]? Read an article that said so, however there should exist a more cleaner way to do this
         t = t[-1]
-#        print(t)
-#        print()
-#        raise ValueError('A very specific bad thing happened.')
+
         
 
         return t
@@ -81,7 +79,6 @@ if __name__ == "__main__":
     model = LSTM(input_size = 1, hidden_size = 100,
                  num_layers = 1, output_size = 1, batch_size = 1)
     learning_rate = 0.001
-    num_epoch = 100
 
     loss_function = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
@@ -91,15 +88,13 @@ if __name__ == "__main__":
     for epoch in range(epochs):
         for seq, labels in data.train_data:
             optimizer.zero_grad()
-#            print(samples)
-#            print(labels)
+
             output = model(seq)
-#            print(output)
             loss = loss_function(output, torch.Tensor([labels]))
             loss.backward()
             optimizer.step()
-#            if epoch % 25 == 1:
-#                print("Epoch: %d, loss: %1.5f" % (epoch, loss.item()))
+
+        #Add: Print loss function for given epoch.
 
     model.eval()
     predictions = []
@@ -109,14 +104,16 @@ if __name__ == "__main__":
         for seq, labels in data.test_data:
             output = model(seq)
             predictions.append(output.item())
+    #Convert prediction from torch tensor to numpy array
     predictions = np.array(predictions)
+    #Inverse the normalization
     predictions = data.sc.inverse_transform((predictions).reshape(-1, 1))
 
-    trained_val = np.linspace(0,len(data.train_data_0)-1,len(data.train_data_0))
+    trained_val = np.linspace(0,len(data.dataset)-1,len(data.dataset))
     test_val = np.linspace(1935,2034,100)
 
     plt.figure()
-    plt.plot(trained_val,data.train_data_0,
+    plt.plot(trained_val,data.dataset,
              test_val, predictions)
         
         
