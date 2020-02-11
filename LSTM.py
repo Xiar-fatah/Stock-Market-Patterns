@@ -72,11 +72,6 @@ class LSTM(nn.Module):
 
         return t
 
-##Add RMS & MAPE
-def RMS():
-    return 0
-def MAPE():
-    return 0
 
 if __name__ == "__main__":
     
@@ -121,9 +116,7 @@ if __name__ == "__main__":
     plt.plot(trained_val,data.dataset,
              test_val, predictions)
         
-        
-    ##Plot MAPE and RMS
-    ##Plot Loss function for given epoch
+
         
         
         
