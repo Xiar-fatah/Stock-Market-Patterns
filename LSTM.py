@@ -5,6 +5,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import data
+import ERRORS
 from sklearn.preprocessing import MinMaxScaler
 
 
@@ -115,8 +116,11 @@ if __name__ == "__main__":
     plt.figure()
     plt.plot(trained_val,data.dataset,
              test_val, predictions)
-        
-
+    actaul_val = data.dataset[1935:]
+    print("RMS: " + str(ERRORS.RMS(predictions, actaul_val)) + "\n"
+          "MAPE: " + str(ERRORS.MAPE(predictions, actaul_val)) + "\n"
+          "MAE: " + str(ERRORS.MAE(predictions, actaul_val)) + "\n"
+          "R: " + str(ERRORS.R(predictions, actaul_val)))
         
         
         
