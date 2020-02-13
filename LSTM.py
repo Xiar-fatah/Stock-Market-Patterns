@@ -116,6 +116,7 @@ if __name__ == "__main__":
     plt.figure()
     plt.plot(trained_val,data.dataset,
              test_val, predictions)
+    
     actaul_val = data.dataset[1935:]
     print("RMS: " + str(ERRORS.RMS(predictions, actaul_val)) + "\n"
           "MAPE: " + str(ERRORS.MAPE(predictions, actaul_val)) + "\n"
