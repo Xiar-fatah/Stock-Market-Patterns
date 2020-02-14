@@ -1,13 +1,14 @@
 import torch
 import matplotlib.pyplot as plt
+from plotly.offline import plot
+import plotly.graph_objs as go
 import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import data
-import ERRORS
 from sklearn.preprocessing import MinMaxScaler
-
+import ERRORS
 
 class LSTM(nn.Module):
     def __init__(self, input_size, hidden_size, num_layers, output_size,batch_size):
@@ -73,28 +74,29 @@ class LSTM(nn.Module):
 
         return t
 
-
 if __name__ == "__main__":
-    
+    # Create the model
     model = LSTM(input_size = 1, hidden_size = 100,
-                 num_layers = 1, output_size = 1, batch_size = 1)
+                num_layers = 1, output_size = 1, batch_size = 1)
     learning_rate = 0.001
-
     loss_function = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    
     epochs = 1
+    
+    ################ Train ###############
 
     for epoch in range(epochs):
-        for seq, labels in data.train_data:
-            optimizer.zero_grad()
+      running_loss = 0.0
+      for seq, labels in data.train_data:
+          optimizer.zero_grad()
+          output = model(seq)
+          loss = loss_function(output, torch.Tensor([labels]))
+          loss.backward()
+          optimizer.step()
+          
+          
 
-            output = model(seq)
-            loss = loss_function(output, torch.Tensor([labels]))
-            loss.backward()
-            optimizer.step()
-
-        ##Add: Print loss function for given epoch.
+    ################ Prediction ###############
 
     model.eval()
     predictions = []
@@ -104,30 +106,45 @@ if __name__ == "__main__":
         for seq, labels in data.test_data:
             output = model(seq)
             predictions.append(output.item())
-    #Convert prediction from torch tensor to numpy array
-    predictions = np.array(predictions)
-    #Inverse the normalization
-    predictions = data.sc.inverse_transform((predictions).reshape(-1, 1))
-
-    ##Add dates instead of numbers
-    trained_val = np.linspace(0,len(data.dataset)-1,len(data.dataset))
-    test_val = np.linspace(1935,2034,100)
-
-    plt.figure()
-    plt.plot(trained_val,data.dataset,
-             test_val, predictions)
+            
+    ################ Predictions to list ###############
     
-    actaul_val = data.dataset[1935:]
-    print("RMS: " + str(ERRORS.RMS(predictions, actaul_val)) + "\n"
-          "MAPE: " + str(ERRORS.MAPE(predictions, actaul_val)) + "\n"
-          "MAE: " + str(ERRORS.MAE(predictions, actaul_val)) + "\n"
-          "R: " + str(ERRORS.R(predictions, actaul_val)))
+    predictions = np.array(predictions)
+    predictions = data.sc.inverse_transform((predictions).reshape(-1, 1))
+    
+    
+    predictions = predictions.flatten()
+    predictions = predictions.tolist()
+
+    ################ Plot ###############
+    
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+                  x = data.data_date,
+                  y = data.data_open_list,
+                  name="Actaul Value",
+                  line_color='deepskyblue',
+                  opacity=0.8))
+    fig.add_trace(go.Scatter(
+                    x = data.data_date_test,
+                    y = predictions,
+                    name="Predictions",
+                    line_color='dimgray',
+                    opacity=0.8))
+    
+    fig.update_layout(title_text='Tata Global Beverages Stock Prediction',
+                    xaxis_rangeslider_visible=True,
+                    xaxis_title='Time',
+                    yaxis_title='US Dollars')
+    
+    plot(fig)   
         
         
-        
-        
-        
-        
+    actual_val = data.data_open_list[100:0:-1]
+    print("RMS: " + str(ERRORS.RMS(predictions, actual_val)) + "\n"
+        "MAPE: " + str(ERRORS.MAPE(predictions, actual_val)) + "\n"
+        "MAE: " + str(ERRORS.MAE(predictions, actual_val)) + "\n"
+        "R: " + str(ERRORS.R(predictions, actual_val)))    
         
         
         

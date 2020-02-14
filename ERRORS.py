@@ -20,8 +20,8 @@ import numpy as np
 def RMS(y,t):
     arr_len = len(t)
     # Now we want to subtract each element in t and y and list them
-    forecast_errors = [t[i]-y[i] for i in range(arr_len)]
-    RMS = np.sqrt(1/(arr_len)) * np.sum(forecast_errors)
+    forecast_errors = [pow(t[i]-y[i],2) for i in range(arr_len)]
+    RMS = np.sqrt(1/(arr_len)) * np.sqrt(np.sum(forecast_errors))
     return RMS
 
 """
@@ -32,16 +32,20 @@ def RMS(y,t):
 def MAPE(y,t):
     arr_len = len(t)
     forecast_errors = [abs((t[i]-y[i])/t[i]) for i in range(arr_len)]
+    print(forecast_errors)
+    print(np.sum(forecast_errors))
+    print(arr_len)
     MAPE = 1/arr_len * np.sum(forecast_errors)
     return MAPE
 
 """
-    This index measures the average magnitude of the errors in a set of predictions,
-    without considering their direction
+    Mean Absolute Error (MAE): This index measures the average magnitude of the
+    errors in a set of predictions, without considering their direction.
 """
 def MAE(y,t):
     arr_len = len(t)
-    forecast_errors = [t[i]-y[i] for i in range(arr_len)]
+    forecast_errors = [abs(t[i]-y[i]) for i in range(arr_len)]
+    print(forecast_errors)
     MAE = np.multiply(1/arr_len,np.sum(forecast_errors))
     return MAE
 

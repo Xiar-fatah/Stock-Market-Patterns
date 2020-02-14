@@ -1,38 +1,36 @@
+#from IPython import get_ipython
+#get_ipython().magic('reset -sf')
+
 from plotly.offline import plot
 import plotly.graph_objs as go
 import numpy as np
 import pandas as pd
-
-#Importing data
+# Importing data
 url = 'https://raw.githubusercontent.com/mwitiderrick/stockprice/master/NSE-TATAGLOBAL.csv'
 read_in_dataset= pd.read_csv(url)
-#Creating training dataset by extracting opening values of data
-dataset = read_in_dataset.iloc[:, 1:2].values
-data_set_time = read_in_dataset.iloc[:, 0:1].values
-################### Data ###################
+# Creating dataset by extracting opening values and dates of data
+data_open = read_in_dataset.iloc[:,1]
+data_date = read_in_dataset.iloc[:,0]
+# Transform the extracted values to a list, the first values of the list are the recent ones
+data_open = data_open.tolist()
+data_date = data_date.tolist()
 
-data = dataset.flatten() #Flattens the numpy array to an array so plotly can read it
-data_set_time = data_set_time.flatten()
-test = []
-for i in range(0,2035):
-    test.append(data_set_time[i])
-################### Prediction ###################
-x_axis_p = test[0:100]
+################### Test data ###################
 
-y_axis_p = data[0:100]
-print(x_axis_p)
+data_open_test = data_open[0:100]
+data_date_test = data_date[0:100]
 
 fig = go.Figure()
 fig.add_trace(go.Scatter(
-                x = test,
-                y = data,
+                x = data_date,
+                y = data_open,
                 name="Actaul Value",
                 line_color='deepskyblue',
                 opacity=0.8))
 
 fig.add_trace(go.Scatter(
-                x = x_axis_p,
-                y = y_axis_p,
+                x = data_date_test,
+                y = data_open_test,
                 name="Predicted Value",
                 line_color='green',
                 opacity=0.8))
