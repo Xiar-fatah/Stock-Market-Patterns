@@ -32,9 +32,6 @@ def RMS(y,t):
 def MAPE(y,t):
     arr_len = len(t)
     forecast_errors = [abs((t[i]-y[i])/t[i]) for i in range(arr_len)]
-    print(forecast_errors)
-    print(np.sum(forecast_errors))
-    print(arr_len)
     MAPE = 1/arr_len * np.sum(forecast_errors)
     return MAPE
 
@@ -45,7 +42,6 @@ def MAPE(y,t):
 def MAE(y,t):
     arr_len = len(t)
     forecast_errors = [abs(t[i]-y[i]) for i in range(arr_len)]
-    print(forecast_errors)
     MAE = np.multiply(1/arr_len,np.sum(forecast_errors))
     return MAE
 
