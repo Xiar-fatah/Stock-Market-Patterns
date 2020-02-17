@@ -63,10 +63,13 @@ class LSTM(nn.Module):
         c_n of shape (num_layers * num_directions, batch, hidden_size): tensor containing the cell state for t = seq_len.
         """
         #Reshape the input tensor to satisfy (seq_len, batch, input_size) according to the docs
+#        print(t.shape)
 #        print(t)
-        t = t.view(len(t),1, -1)
-#        print(t)
-        raise ValueError('test')
+#        print(len(t))
+        
+        t = t.view(60,1,2)
+        print(t)
+        print(t.shape)
         t, (h_n,c_n) = self.lstm(t, (self.hidden_cell()))
         t = t.view(-1, self.hidden_size)
         t = self.linear(t)
@@ -79,7 +82,7 @@ class LSTM(nn.Module):
 
 if __name__ == "__main__":
     # Create the model
-    model = LSTM(input_size = 1, hidden_size = 100,
+    model = LSTM(input_size = 2, hidden_size = 100,
                 num_layers = 1, output_size = 1, batch_size = 1)
     learning_rate = 0.001
     loss_function = nn.MSELoss()
@@ -91,7 +94,6 @@ if __name__ == "__main__":
     for epoch in range(epochs):
       running_loss = 0.0
       for seq, labels in data.train_data:
-          print(seq)
           optimizer.zero_grad()
           output = model(seq)
           loss = loss_function(output, torch.Tensor([labels]))
@@ -108,7 +110,6 @@ if __name__ == "__main__":
         correct = 0
         total = 0
         for seq, labels in data.test_data:
-            print(seq)
             output = model(seq)
             predictions.append(output.item())
             
