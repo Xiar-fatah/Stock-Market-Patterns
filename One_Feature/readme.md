@@ -12,4 +12,6 @@ Is used for debugging and adding new features in spyder.
 ## Model.ipynb
 Is used to run the simulation.
 
+## Bachelor_Thesis_Week_7_LSTM.pdf
+Contains an explanation behind the theory of LSTM.
 
