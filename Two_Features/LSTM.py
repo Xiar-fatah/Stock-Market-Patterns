@@ -68,8 +68,7 @@ class LSTM(nn.Module):
 #        print(len(t))
         
         t = t.view(60,1,2)
-        print(t)
-        print(t.shape)
+
         t, (h_n,c_n) = self.lstm(t, (self.hidden_cell()))
         t = t.view(-1, self.hidden_size)
         t = self.linear(t)
@@ -96,7 +95,10 @@ if __name__ == "__main__":
       for seq, labels in data.train_data:
           optimizer.zero_grad()
           output = model(seq)
-          loss = loss_function(output, torch.Tensor([labels]))
+          loss = loss_function(output, torch.tensor([labels]))
+          print(labels)
+          print(torch.tensor([labels]))
+          raise ValueError('test')
           loss.backward()
           optimizer.step()
           

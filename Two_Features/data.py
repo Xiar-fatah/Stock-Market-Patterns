@@ -81,7 +81,7 @@ for i in range(0, 100):
     test_data.append((concate,y_labels_tensor[100-i]))
 
 
-    
+print(train_data[0])
     
     
     
