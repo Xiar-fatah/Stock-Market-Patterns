@@ -24,6 +24,11 @@ rsi12= ti.rsi(data_closing,12)
 # willr, Williams Index for periods 5 and 10
 willr_5,willr_10 = ti.willr(data_high,data_low,data_closing,5), ti.willr(data_high,data_low,data_closing,10)
 
+# mom, Momentum for periods 6 and 12
+mom_6,mom_12 = ti.mom(data_closing,6),ti.mom(data_closing,12)
+
+# Price rate of change, double check the period.
+roc = ti.roc(data_closing, 60)
 
 #def print_info(indicator):
 #    print("Type:", indicator.type)
