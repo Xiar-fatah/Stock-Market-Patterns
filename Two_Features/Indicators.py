@@ -29,6 +29,10 @@ mom_6,mom_12 = ti.mom(data_closing,6),ti.mom(data_closing,12)
 
 # Price rate of change, double check the period.
 roc = ti.roc(data_closing, 60)
+# Double check n,n,p in the wikipedia article
+n,m,p = 5,2,4
+# Stochastic oscillator
+K,D = ti.stoch(data_high,data_low,data_closing,n,m,p)
 
 #def print_info(indicator):
 #    print("Type:", indicator.type)
