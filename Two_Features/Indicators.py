@@ -15,7 +15,7 @@ data_closing = np.asarray(read_in_dataset.iloc[:,4].tolist())
 ma5,ma10,ma20 = ti.sma(data_open,5), ti.sma(data_open,10), ti.sma(data_open,20)
 
 # diff = EMA12-EMA26, also known as the MACD indicator
-diff = ti.ema(data_closing, 12) - ti.ema(data_closing,26)
+diff = ti.ema(data_closing, 12) - ti.ema(data_closing,26) # <- TODO: MATRIX SUBTRACTION
 
 # RSI, Relative Strong Index for periods 6 and 12
 rsi6 = ti.rsi(data_closing,6)
@@ -33,6 +33,13 @@ roc = ti.roc(data_closing, 60)
 n,m,p = 5,2,4
 # Stochastic oscillator
 K,D = ti.stoch(data_high,data_low,data_closing,n,m,p)
+
+# tr, True range of price movements
+tr = ti.tr(data_high,data_low,data_closing)
+
+# 
+osc6, osc12 = ti.ultosc(data_high,data_low,data_closing,n,m,p), (data_high,data_low,data_closing,n,m,p)
+
 
 #def print_info(indicator):
 #    print("Type:", indicator.type)
