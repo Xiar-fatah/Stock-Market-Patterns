@@ -1,5 +1,8 @@
-from indic import Indicators
-url = 'https://raw.githubusercontent.com/mwitiderrick/stockprice/master/NSE-TATAGLOBAL.csv'
-store = Indicators(url,10)
-store_1 = store.train
-print(store_1)
+import pandas as pd
+import os
+path = 'MSFT.xlsx'
+df = pd.read_excel(r'MSFT.xlsx')
+
+df['Ratio'] = df['Open']/df['High']
+df.head(5)
+
