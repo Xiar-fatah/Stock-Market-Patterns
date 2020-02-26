@@ -21,7 +21,7 @@ def RMS(y,t):
     arr_len = len(t)
     # Now we want to subtract each element in t and y and list them
     forecast_errors = [pow(t[i]-y[i],2) for i in range(arr_len)]
-    RMS = np.sqrt(1/(arr_len)) * np.sqrt(np.sum(forecast_errors))
+    RMS = np.sqrt(1/(arr_len)) * np.sum(forecast_errors)
     return RMS
 
 """
