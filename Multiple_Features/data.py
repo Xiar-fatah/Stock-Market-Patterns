@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import torch 
 
-csv_path = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/master/Tensorflow/fin.csv'
+csv_path = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/master/Multiple_Features/fin.csv'
 df = pd.read_csv(csv_path)
 
 def univariate_data(dataset, start_index, end_index, history_size, target_size):
@@ -23,6 +23,7 @@ def univariate_data(dataset, start_index, end_index, history_size, target_size):
 
 uni_data = df['4. close']
 uni_data = np.flip(uni_data.tolist())
+real = uni_data[4020:]
 mean, std = uni_data.mean(),uni_data.std()
 uni_data = (uni_data-mean)/std
 
@@ -34,18 +35,17 @@ x_train, y_train = univariate_data(uni_data, 0, TRAIN_SPLIT,
                                            window,
                                            prediction)
 
-x_test, y_test = univariate_data(uni_data, TRAIN_SPLIT, 0,
+x_test, y_test = univariate_data(uni_data, TRAIN_SPLIT, None,
                                        window,
                                        prediction)
 
-x_train, y_train = torch.tensor(x_train), torch.tensor(y_train)
+x_train, y_train = torch.Tensor(x_train), torch.Tensor(y_train)
 train = torch.utils.data.TensorDataset(x_train,y_train)
 
 trainloader = torch.utils.data.DataLoader(train , batch_size=1,
                                               shuffle=False, num_workers=4)
 
-x_test, y_test= torch.tensor(x_test), torch.tensor(y_test)
-
+x_test, y_test= torch.Tensor(x_test), torch.Tensor(y_test)
 test = torch.utils.data.TensorDataset(x_test,y_test)
 
 testloader = torch.utils.data.DataLoader(test , batch_size=1,

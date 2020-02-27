@@ -42,7 +42,7 @@ if __name__ == "__main__":
     learning_rate = 0.01
     loss_function = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    epochs = 1
+    epochs = 20
     
 
     # Training
@@ -51,7 +51,7 @@ if __name__ == "__main__":
         running_loss = 0.0
         for i, (seq, labels) in enumerate(train):
             optimizer.zero_grad()
-            output = model(seq.double())
+            output = model(seq)
             loss = loss_function(output, torch.tensor([labels]))
             loss.backward()
             optimizer.step()
@@ -67,21 +67,24 @@ if __name__ == "__main__":
     with torch.no_grad():
         correct = 0
         total = 0
-        for i, (seq, labels) in test:
-            output = model(seq.float())
+        for i, (seq, labels) in enumerate(test):
+            output = model(seq)
             predictions.append(output.item())
-    
-    actual_val = data.data_open_list[100:0:-1]
-    print("RMS: " + str(ERRORS.RMS(predictions, actual_val)) + "\n"
-        "MAPE: " + str(ERRORS.MAPE(predictions, actual_val)) + "\n"
-        "MAE: " + str(ERRORS.MAE(predictions, actual_val)) + "\n"
-        "R: " + str(ERRORS.R(predictions, actual_val)))    
-    
-    # plot
+            
     predictions = np.array(predictions)
-    predictions = data.sc.inverse_transform((predictions).reshape(-1, 1))
+    predictions = predictions * data.std + data.mean
     predictions = predictions.flatten()
     predictions = predictions.tolist()
+    real = data.real
+    print("RMS: " + str(ERRORS.RMS(predictions, real)) + "\n"
+        "MAPE: " + str(ERRORS.MAPE(predictions, real)) + "\n"
+        "MAE: " + str(ERRORS.MAE(predictions, real)) + "\n"
+        "R: " + str(ERRORS.R(predictions, real)))    
+    
+    plt.plot(predictions)
+    plt.plot(real)
+    # plot
+
 
 
     
