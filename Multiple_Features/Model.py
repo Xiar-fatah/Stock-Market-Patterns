@@ -10,22 +10,24 @@ import ERRORS
 
 
 class LSTM(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers, output_size,batch_size):
+    def __init__(self, input_size, hidden_size, num_layers, output_size,batch_size,dropout = 1):
         super(LSTM, self).__init__()
         self.input_size = input_size #1 
         self.hidden_size = hidden_size #trial and error
         self.num_layers = num_layers #is a number between 1 and 3
         self.output_size = output_size #1
         self.batch_size = batch_size #60
+        self.dropout = dropout
+
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, self.num_layers)
         self.linear = nn.Linear(hidden_size, output_size)
         
-    def hidden_cell(self):
-        h_0,c_0 = (torch.zeros(self.num_layers,self.batch_size,self.hidden_size), 
-        torch.zeros(self.num_layers,self.batch_size,self.hidden_size))
+    def hidden_cell(self, t):
+        h_0,c_0 = (torch.zeros(self.num_layers,t.shape[1],self.hidden_size), 
+        torch.zeros(self.num_layers,t.shape[1],self.hidden_size))
         return h_0,c_0 
     def forward(self, t):
-        t, (h_n,c_n) = self.lstm(t, (self.hidden_cell()))
+        t, (h_n,c_n) = self.lstm(t, (self.hidden_cell(t)))
         t = t.view(-1, self.hidden_size)
         t = self.linear(t)
         t = t[-1]
@@ -37,12 +39,12 @@ class LSTM(nn.Module):
 if __name__ == "__main__":
     # Model
     # TODO: Fix batch_size
-    model = LSTM(input_size = 1, hidden_size = 32,
-                num_layers = 2, output_size = 1, batch_size = 20)
-    learning_rate = 0.01
+    model = LSTM(input_size = 1, hidden_size = 64,
+                num_layers = 2, output_size = 1, batch_size = 1)
+    learning_rate = 0.001
     loss_function = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    epochs = 20
+    epochs = 140
     
 
     # Training
@@ -83,6 +85,7 @@ if __name__ == "__main__":
     
     plt.plot(predictions)
     plt.plot(real)
+    plt.legend(('pred','real'))
     # plot
 
 
