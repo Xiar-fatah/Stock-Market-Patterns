@@ -21,8 +21,8 @@ class LSTM(nn.Module):
         self.linear = nn.Linear(hidden_size, output_size)
         
     def hidden_cell(self):
-        h_0,c_0 = (torch.zeros(1,self.batch_size,self.hidden_size), 
-        torch.zeros(1,self.batch_size,self.hidden_size))
+        h_0,c_0 = (torch.zeros(self.num_layers,self.batch_size,self.hidden_size), 
+        torch.zeros(self.num_layers,self.batch_size,self.hidden_size))
         return h_0,c_0 
     def forward(self, t):
         t, (h_n,c_n) = self.lstm(t, (self.hidden_cell()))
@@ -37,8 +37,8 @@ class LSTM(nn.Module):
 if __name__ == "__main__":
     # Model
     # TODO: Fix batch_size
-    model = LSTM(input_size = 1, hidden_size = 100,
-                num_layers = 1, output_size = 1, batch_size = 20)
+    model = LSTM(input_size = 1, hidden_size = 32,
+                num_layers = 2, output_size = 1, batch_size = 20)
     learning_rate = 0.01
     loss_function = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
