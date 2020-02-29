@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import torch 
 
-csv_path = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/master/Multiple_Features/fin.csv'
+csv_path = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/master/Core/MSFT.csv'
 df = pd.read_csv(csv_path)
 
 def univariate_data(dataset, start_index, end_index, history_size, target_size):
@@ -30,7 +30,6 @@ uni_data = (uni_data-mean)/std
 window = 20
 prediction = 0
 TRAIN_SPLIT = 4000
-print(uni_data)
 x_train, y_train = univariate_data(uni_data, 0, TRAIN_SPLIT,
                                            window,
                                            prediction)

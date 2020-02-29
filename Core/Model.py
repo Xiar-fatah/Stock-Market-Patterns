@@ -21,31 +21,26 @@ class LSTM(nn.Module):
         self.linear = nn.Linear(hidden_size, output_size)
         
     def hidden_cell(self,t):
-        h_0,c_0 = (torch.zeros(2,20,32), torch.zeros(2,20,32))
+        h_0,c_0 = (torch.zeros(self.num_layers,self.batch_size,self.hidden_size), 
+        torch.zeros(self.num_layers,self.batch_size,self.hidden_size))
         return h_0,c_0 
+    
     def forward(self, t):
-        t = t.reshape(20,1,-1)
-        
         t, (h_n,c_n) = self.lstm(t, (self.hidden_cell(t)))
-        print(t.shape)
-        t = t.view(32,-1)
-        
-
+        t = t.view(-1, self.hidden_size)
         t = self.linear(t)
-        print(t.shape)
-        raise ValueError
-
+        t = t[-1]
         return t
 
 if __name__ == "__main__":
     # Model
-    # TODO: Fix batch_size
-    model = LSTM(input_size = 1, hidden_size = 32,
-                num_layers = 2, output_size = 1, batch_size = 1)
+    # TODO: Understand all the parameters and data and find a source for them
+    model = LSTM(input_size = 1, hidden_size = 64,
+                num_layers = 3, output_size = 1, batch_size = 1)
     learning_rate = 0.001
     loss_function = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    epochs = 1
+    epochs = 60
     
 
     # Training
@@ -54,15 +49,13 @@ if __name__ == "__main__":
         running_loss = 0.0
         for i, (seq, labels) in enumerate(train):
             optimizer.zero_grad()
-
             output = model(seq)
             loss = loss_function(output, labels)
             loss.backward()
             optimizer.step()
             
-        if epoch % 10 == 0:
-            print('Epoch [{}/{}], Loss: {:.4f}' 
-                  .format(epoch+1, epochs, loss.item()))
+        if (epoch + 1) % 10 == 0:
+            print("Epoch: {}, Loss: {:.5f}".format(epoch + 1, loss.item()))
 
     #Evaluation
     test = data.testloader
