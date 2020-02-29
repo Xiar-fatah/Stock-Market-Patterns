@@ -30,7 +30,7 @@ uni_data = (uni_data-mean)/std
 window = 20
 prediction = 0
 TRAIN_SPLIT = 4000
-
+print(uni_data)
 x_train, y_train = univariate_data(uni_data, 0, TRAIN_SPLIT,
                                            window,
                                            prediction)
