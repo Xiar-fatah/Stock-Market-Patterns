@@ -1,13 +1,13 @@
 # Stock-Market-Patterns
 
 ## data.py 
-Pre-processes all data, it is imported into LSTM.py and Model.ipynb
+Prepares all data using the sliding window method, it is imported into Model.py
 
-## LSTM.py
-Is used for debugging and adding new features in spyder.
-
-## Model.ipynb
+## Model.py
 Is used to run the simulation.
 
-## More features that should be added
-https://trello.com/b/7VkaXexy/lstm
+## Errors.py
+Contains the error calculations for the testing data.
+
+## MSFT.csv
+Contains technicial indicators for the Microsoft stock between 2000-2020.
