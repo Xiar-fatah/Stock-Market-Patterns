@@ -27,8 +27,7 @@ class Indicators:
 
         ts = TimeSeries(key, output_format='pandas')
         ti = TechIndicators(key, output_format='pandas')
-        
-        
+    
         # Get the data, returns a tuple
         # aapl_data is a pandas dataframe, _ is a dict
         csv_data, _ = ts.get_daily(symbol=company, outputsize = 'full')
