@@ -42,11 +42,13 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     epochs = 60
     
+    csv_path = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/master/Core/MSFT.csv'
+
+    
 
     # Training
     train = data.trainloader
     for epoch in range(epochs):
-        running_loss = 0.0
         for i, (seq, labels) in enumerate(train):
             optimizer.zero_grad()
             output = model(seq)
@@ -57,29 +59,30 @@ if __name__ == "__main__":
         if (epoch + 1) % 10 == 0:
             print("Epoch: {}, Loss: {:.5f}".format(epoch + 1, loss.item()))
 
-    #Evaluation
-    test = data.testloader
-    model.eval()
-    predictions = []
-    with torch.no_grad():
-        correct = 0
-        total = 0
-        for i, (seq, labels) in enumerate(test):
-            output = model(seq)
-            predictions.append(output.item())
-            
-    predictions = np.array(predictions)
-    predictions = predictions * data.std + data.mean
-    predictions = predictions.flatten()
-    predictions = predictions.tolist()
-    real = data.real
-    print("RMS: " + str(ERRORS.RMS(predictions, real)) + "\n"
-        "MAPE: " + str(ERRORS.MAPE(predictions, real)) + "\n"
-        "MAE: " + str(ERRORS.MAE(predictions, real)) + "\n"
-        "R: " + str(ERRORS.R(predictions, real)))    
-    
-    plt.plot(predictions)
-    plt.plot(real)
+        #Evaluation
+        test = data.testloader
+        model.eval()
+        predictions = []
+        with torch.no_grad():
+            correct = 0
+            total = 0
+            for i, (seq, labels) in enumerate(test):
+                output = model(seq)
+                print(output)
+                predictions.append(output.item())
+                
+        predictions = np.array(predictions)
+        predictions = predictions * data.std + data.mean
+        predictions = predictions.flatten()
+        predictions = predictions.tolist()
+        real = data.real
+        print("RMS: " + str(ERRORS.RMS(predictions, real)) + "\n"
+            "MAPE: " + str(ERRORS.MAPE(predictions, real)) + "\n"
+            "MAE: " + str(ERRORS.MAE(predictions, real)) + "\n"
+            "R: " + str(ERRORS.R(predictions, real)))    
+        
+        plt.plot(predictions)
+        plt.plot(real)
     # plot
 
 

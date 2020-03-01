@@ -44,7 +44,9 @@ train = torch.utils.data.TensorDataset(x_train,y_train)
 trainloader = torch.utils.data.DataLoader(train , batch_size=1,
                                               shuffle=True, num_workers=0)
 
-x_test, y_test= torch.Tensor(x_test), torch.Tensor(y_test)
+check_x = x_test
+check_y = y_test
+x_test, y_test = torch.Tensor(x_test), torch.Tensor(y_test)
 test = torch.utils.data.TensorDataset(x_test,y_test)
 
 testloader = torch.utils.data.DataLoader(test , batch_size=1,
