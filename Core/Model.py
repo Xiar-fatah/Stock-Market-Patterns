@@ -4,8 +4,7 @@ import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-import test_data_class
-from sklearn.preprocessing import MinMaxScaler
+import data_class
 import ERRORS
 
 
@@ -39,10 +38,13 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     epochs = 60
     
-    
+    # Fetch all data
+    csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/master/Core/MSFT.csv'
 
+    data = data_class.data(train_start = 0, train_end = 4000, test_start = 3980, test_end = 5004, window = 20, csv_path = csv)
+    
     # Training
-    train = test_data_class.trainloader
+    train = data.trainloader
     for epoch in range(epochs):
         for i, (seq, labels) in enumerate(train):
             optimizer.zero_grad()
@@ -55,19 +57,15 @@ if __name__ == "__main__":
             print("Epoch: {}, Loss: {:.5f}".format(epoch + 1, loss.item()))
 
         #Evaluation
-        test = test_data_class.testloader
+        test = data.testloader
         model.eval()
         predictions = []
-        print("hello")
         with torch.no_grad():
             for i, (seq, labels) in enumerate(test):
-                print("for")
                 output = model(seq)
-                print(output)
                 predictions.append(output.item())
-                print(predictions)
-        predictions = np.add(np.multiply(predictions,test_data_class.df_std), test_data_class.df_mean)
-        real = test_data_class.check
+        predictions = np.add(np.multiply(predictions,data.df_std), data.df_mean)
+        real = data.real
         print("RMS: " + str(ERRORS.RMS(predictions, real)) + "\n"
             "MAPE: " + str(ERRORS.MAPE(predictions, real)) + "\n"
             "MAE: " + str(ERRORS.MAE(predictions, real)) + "\n"
@@ -75,6 +73,7 @@ if __name__ == "__main__":
         
         plt.plot(predictions)
         plt.plot(real)
+        plt.legend(('Pred','Stock'))
         plt.show()
 
 

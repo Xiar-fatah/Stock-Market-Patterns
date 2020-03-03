@@ -10,33 +10,45 @@ class data:
         self.test_start, self.test_end = test_start, test_end
         self.window = window
         self.csv_path = csv_path
-        self.train_x, self.train_y = self.roll(self.train_start, self.train_end, self.window, self.csv_path)
-        self.test_x, self.test_y = self.roll(self.test_start, self.test_end, self.window, self.csv_path)
+        self.data_tot = self.fetch(self.csv_path)
+        self.real = self.stock(self.data_tot, self.test_start, self.test_end,self.window)
+        self.train_x, self.train_y = self.roll(self.train_start, self.train_end, self.window, self.data_tot)
+        self.test_x, self.test_y = self.roll(self.test_start, self.test_end, self.window, self.data_tot)
         self.shuffle_train = True
         self.shuffle_test = False
-        self.dataloader_train = self.arr_tensor(self.train_x, self.train_y, self.shuffle_train)
-        self.dataloader_test = self.arr_tensor(self.test_x, self.test_y, self.shuffle_test)
+        self.trainloader = self.arr_tensor(self.train_x, self.train_y, self.shuffle_train)
+        self.testloader = self.arr_tensor(self.test_x, self.test_y, self.shuffle_test)
+        self.df_mean, self.df_std = self.normalize(self.data_tot) 
         
-    def roll(self, start, end, window, path):
-        data = []
-        labels = []
-        data_tot = pd.read_csv(path).iloc[::-1]
+    def normalize(self,df):
+        # store the normalization constants
+        df = df.drop('date', 1) # Remove date
+        df = df.drop('5. volume', 1) # Remove volume
+        return df.mean()[3], df.std()[3]
+    def fetch(self, csv_path):
+        return pd.read_csv(csv_path).iloc[::-1] # Read in the data and flip it
+    
+    def stock(self, df, start, end, window):
+        if end== 'last':
+            end = df.columns.shape[0]
+        return df['4. close'].tolist()[start + window:end]
+        
+    def roll(self, start, end, window, df):
+        df = df.drop('date', 1) # Remove date
+        df = df.drop('5. volume', 1) # Remove volume
+        df = (df-df.mean())/df.std()
+        data = [] # X
+        close_arr = df['4. close'].tolist()
+        labels = close_arr[start + window:end] # Y
         start = start + window # Begins at the first 20 elements
         if end == 'last':
-            end = data_tot.columns.shape[0]
-            
+            end = df.columns.shape[0]
         for i in range(start, end):
             temp = []
-            for col in range(0, len(data_tot.columns)): # (5004,16)
-                if (data_tot.columns[col] == 'date') == False | (data_tot.columns[col] == '5. volume') == False:
-                    col_arr = data_tot.iloc[:,col].tolist()    
-                    temp.append(np.reshape(col_arr[i-window:i], window))
+            for col in range(0, len(df.columns)): # (5004,16)
+                col_arr = df.iloc[:,col].tolist()    
+                temp.append(np.reshape(col_arr[i-window:i], window))
             data.append(np.transpose(temp))
-                    
-        for i in range(start, end): 
-            close_arr = data_tot['4. close'].tolist()
-            labels.append(close_arr[i-window:i])
-    
         return np.array(data), np.array(labels)
         
     def arr_tensor(self, x, y, shuffle):
