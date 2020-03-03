@@ -34,9 +34,11 @@ x_train, y_train = univariate_data(uni_data, 0, TRAIN_SPLIT,
                                            window,
                                            prediction)
 
+
 x_test, y_test = univariate_data(uni_data, TRAIN_SPLIT, None,
                                        window,
                                        prediction)
+print(x_test[0])
 
 x_train, y_train = torch.Tensor(x_train), torch.Tensor(y_train)
 train = torch.utils.data.TensorDataset(x_train,y_train)
