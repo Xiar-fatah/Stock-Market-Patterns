@@ -1,6 +1,6 @@
 # Stock-Market-Patterns
 
-## data.py 
+## data_class.py 
 Prepares all data using the sliding window method, it is imported into Model.py
 
 ## Model.py
