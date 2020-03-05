@@ -16,7 +16,7 @@ class LSTM(nn.Module):
         self.num_layers = num_layers
         self.output_size = output_size 
         self.batch_size = batch_size 
-        self.lstm = nn.LSTM(self.input_size, self.hidden_size, self.num_layers, batch_first = True)
+        self.lstm = nn.LSTM(self.input_size, self.hidden_size, self.num_layers, batch_first = True, dropout = 0.3)
         self.linear = nn.Linear(hidden_size, output_size)
         
     def hidden_cell(self):
@@ -31,12 +31,12 @@ class LSTM(nn.Module):
 
 if __name__ == "__main__":
     # Model
-    model = LSTM(input_size = 14, hidden_size = 128 ,
+    model = LSTM(input_size = 14, hidden_size = 20,
                 num_layers = 2, output_size = 1, batch_size = 1)
-    learning_rate = 0.001
+    learning_rate = 0.1
     loss_function = nn.MSELoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    epochs = 60
+    optimizer = torch.optim.Adadelta(model.parameters(), lr=learning_rate)
+    epochs = 500
     
     # Fetch all data
     csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/master/Core/MSFT.csv'
@@ -53,7 +53,7 @@ if __name__ == "__main__":
             loss.backward()
             optimizer.step()
             
-        if (epoch == 1):
+        if (epoch + 1) % 10 == 0:
             print("Epoch: {}, Loss: {:.5f}".format(epoch + 1, loss.item()))
 
         #Evaluation
