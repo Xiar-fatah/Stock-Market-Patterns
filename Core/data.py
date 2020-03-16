@@ -8,7 +8,7 @@ import torch
 
 #csv_path = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/master/Core/MSFT.csv'
 csv_path = "https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/GOOGL.csv"
-df = pd.read_csv(csv_path)
+df = pd.read_excel(csv_path)
 
 def univariate_data(dataset, start_index, end_index, history_size, target_size):
     # Store data and labels
