@@ -7,7 +7,7 @@ import pandas as pd
 import torch 
 
 #csv_path = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/master/Core/MSFT.csv'
-csv_path = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/GOOGL.csv'
+csv_path = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD.csv'
 df = pd.read_csv(csv_path)
 
 def univariate_data(dataset, start_index, end_index, history_size, target_size):

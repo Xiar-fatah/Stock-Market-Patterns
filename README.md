@@ -10,4 +10,4 @@ Is used to run the simulation.
 Contains the error calculations for the testing data.
 
 ## MSFT.csv
-Contains technicial indicators for the Microsoft stock between 2000-2020.
+Contains technicial indicators for Microsoft, Google, Ericsson and Ford stock.

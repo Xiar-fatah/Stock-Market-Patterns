@@ -25,7 +25,6 @@ class data:
         df = df.drop('date', 1) # Remove date
         df = df.drop('5. volume', 1) # Remove volume
         return df.mean()[3], df.std()[3]
-    
     def fetch(self, csv_path):
         return pd.read_csv(csv_path).iloc[::-1] # Read in the data and flip it
     
@@ -46,7 +45,7 @@ class data:
             end = df.columns.shape[0]
         for i in range(start, end):
             temp = []
-            for col in range(0, len(df.columns)): # (5004,16)
+            for col in range(0, 4): # Now only uses high, low, closing, opening
                 col_arr = df.iloc[:,col].tolist()    
                 temp.append(np.reshape(col_arr[i-window:i], window))
             data.append(np.transpose(temp))
@@ -60,8 +59,9 @@ class data:
 
         
         
-        
-        
+csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD.csv'
+test = data(train_start = 0, train_end = 4000, test_start = 3980, test_end = 5003, window = 20, csv_path = csv)
+print(test)
         
         
         
