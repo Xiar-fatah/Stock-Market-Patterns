@@ -38,7 +38,7 @@ TRAIN_SPLIT = 4000
 x_train, y_train = univariate_data(uni_data, 0, TRAIN_SPLIT,
                                            window,
                                            prediction)
-
+check_x, check_y = x_train,y_train
 x_test, y_test = univariate_data(uni_data, TRAIN_SPLIT, None,
                                        window,
                                        prediction)
