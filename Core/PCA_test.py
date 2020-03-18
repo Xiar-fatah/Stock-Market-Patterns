@@ -80,5 +80,5 @@ testloader = torch.utils.data.DataLoader(test , batch_size=1,
 
 
 real = data.real # Fetching the 1000 last values
-mean = data.mean
-std = data.std
+mean = data.df_mean
+std = data.df_std
