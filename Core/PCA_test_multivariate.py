@@ -21,7 +21,7 @@ train_data_stand, mean, std = nor_date(train_data)
 # %%
 # Perform PCA 
 from sklearn.decomposition import PCA
-pca = PCA(n_components=8) # We go from 4 dimensional to 1 dimensional
+pca = PCA(n_components=7) 
 train_PCA = pca.fit_transform(train_data_stand)
 # %%
 # Create a multivariate rolling window
