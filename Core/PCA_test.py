@@ -79,4 +79,4 @@ testloader = torch.utils.data.DataLoader(test , batch_size=1,
                                               shuffle=False, num_workers=0)
 
 
-real = labels[4000:]
+real = labels[4020:]
