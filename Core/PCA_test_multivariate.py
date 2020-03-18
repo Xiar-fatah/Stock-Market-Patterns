@@ -47,7 +47,7 @@ close = train_data_stand['4. close']
 x_train, y_train = roll(0, 4000, 20, train_PCA, close)
 x_test, y_test = roll(3980, 'last', 20, train_PCA, close)
 
-#%% 
+# %% 
 # Convert everything into tensors & load them into loaders
 import torch 
 x_train_tensor, y_train_tensor = torch.Tensor(x_train), torch.Tensor(y_train)
