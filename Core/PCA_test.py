@@ -30,7 +30,6 @@ PCA_df['close'] = train_data['4. close']
 from sklearn.decomposition import PCA
 pca = PCA(n_components=1) # We go from 4 dimensional to 1 dimensional
 train_PCA = pca.fit_transform(PCA_df)
-
 # %%
 # Plot values
 plt.plot(PCA_df['open'].tolist()), plt.plot(PCA_df['high'].tolist()),
@@ -81,4 +80,5 @@ testloader = torch.utils.data.DataLoader(test , batch_size=1,
 
 
 real = data.real # Fetching the 1000 last values
-
+mean = data.mean
+std = data.std
