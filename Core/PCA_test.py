@@ -14,9 +14,9 @@ def nor_date(df):
     df = df.drop('date', 1) # Remove date
     df = df.drop('5. volume', 1) # Remove volume
     df = (df-df.mean())/df.std() # Standarize
-    return df
+    return df, df.mean()[3], df.std()[3]
 
-train_data = nor_date(train_data)
+train_data, mean, std = nor_date(train_data)
 # %%
 # For now we only want low, high, closing and opening to apply PCA to
 PCA_df = pd.DataFrame()
@@ -65,7 +65,7 @@ labels = PCA_df['close'].tolist()
 x_train, y_train = univariate_data(train_PCA, labels, 0, TRAIN_SPLIT, window)
 
 x_test, y_test = univariate_data(train_PCA, labels, TRAIN_SPLIT, None, window)
-
+check_x, check_y = x_test, y_test
 x_train, y_train = torch.Tensor(x_train), torch.Tensor(y_train)
 train = torch.utils.data.TensorDataset(x_train,y_train)
 
@@ -79,6 +79,4 @@ testloader = torch.utils.data.DataLoader(test , batch_size=1,
                                               shuffle=False, num_workers=0)
 
 
-real = data.real # Fetching the 1000 last values
-mean = data.df_mean
-std = data.df_std
+real = labels[4000:]
