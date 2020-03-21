@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 #Import data
 csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD_V2.csv'
-data = data_class.data(train_start = 0, train_end = 4000, test_start = 3980, test_end = 5003, window = 20, csv_path = csv)
+data = data_class.data(train_start = 0, train_end = 4000, test_start = 3980, test_end = 'last', window = 20, csv_path = csv)
 train_data = data.data_tot # Note that the data is already reversed from the class
 # %%
 #Standarize data and remove dates
@@ -17,15 +17,21 @@ def nor_date(df):
     return df, df.mean()[3], df.std()[3]
 
 train_data_stand, mean, std = nor_date(train_data)
+# %%
+from sklearn.decomposition import PCA
 
+# Choosing the number of components
+pca_variance = PCA().fit(train_data_stand)
+plt.plot(np.cumsum(pca_variance.explained_variance_ratio_))
+plt.xlabel('number of components')
+plt.ylabel('cumulative explained variance');
 # %%
 # Perform PCA 
 from sklearn.decomposition import PCA
-pca = PCA(n_components=4) 
+pca = PCA(n_components=10) 
+
 train_PCA = pca.fit_transform(train_data_stand)
-plt.plot(np.cumsum(pca.explained_variance_ratio_))
-plt.xlabel('number of components')
-plt.ylabel('cumulative explained variance');
+
 # %%
 # Create a multivariate rolling window
 import torch 

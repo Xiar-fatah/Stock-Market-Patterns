@@ -37,13 +37,14 @@ class data:
     def roll(self, start, end, window, df):
         df = df.drop('date', 1) # Remove date
         df = df.drop('5. volume', 1) # Remove volume
+        if end == 'last':
+            end = df.columns.shape[0]
         df = (df-df.mean())/df.std()
         data = [] # X
         close_arr = df['4. close'].tolist()
         labels = close_arr[start + window:end] # Y
         start = start + window # Begins at the first 20 elements
-        if end == 'last':
-            end = df.columns.shape[0]
+
         for i in range(start, end):
             temp = []
             for col in range(0, 4): # (5004,16)
