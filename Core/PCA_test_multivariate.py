@@ -28,9 +28,11 @@ plt.ylabel('cumulative explained variance');
 # %%
 # Perform PCA 
 from sklearn.decomposition import PCA
-pca = PCA(n_components=10) 
+pca = PCA(0.5).fit(train_data_stand)
+components = pca.transform(train_data_stand)
 
-train_PCA = pca.fit_transform(train_data_stand)
+train_PCA = pca.inverse_transform(components)
+
 
 # %%
 # Create a multivariate rolling window
