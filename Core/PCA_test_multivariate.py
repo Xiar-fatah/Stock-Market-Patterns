@@ -72,7 +72,7 @@ test = torch.utils.data.TensorDataset(x_test_tensor,y_test_tensor)
 testloader = torch.utils.data.DataLoader(test , batch_size=1,
                                               shuffle=False, num_workers=0)
 
-real = train_data_stand['4. close'].tolist()[4000:]
+real = train_data['4. close'].tolist()[4000:]
 
 
 
