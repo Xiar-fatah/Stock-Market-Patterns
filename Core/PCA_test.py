@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # %%
 
 #Import data
-csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD.csv'
+csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/MSFT.csv'
 data = data_class.data(train_start = 0, train_end = 4000, test_start = 3980, test_end = 5003, window = 20, csv_path = csv)
 train_data = data.data_tot # Note that the data is already reversed from the class
 # %%
