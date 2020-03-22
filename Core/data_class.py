@@ -47,7 +47,7 @@ class data:
 
         for i in range(start, end):
             temp = []
-            for col in range(0, 4): # (5004,16)
+            for col in range(0, len(df.columns)): # (5004,16)
                 col_arr = df.iloc[:,col].tolist()    
                 temp.append(np.reshape(col_arr[i-window:i], window))
             data.append(np.transpose(temp))
