@@ -14,7 +14,7 @@ def nor_date(df):
     df = df.drop('date', 1) # Remove date
     df = df.drop('5. volume', 1) # Remove volume
     mean, std = df.mean(), df.std()
-    df = (df-mean)/df.std # Standarize
+    df = (df-df.mean())/df.std() # Standarize, replacing df.mean() with mean gives error
     return df, mean[3], std[3]
 
 train_data_stand, mean, std = nor_date(train_data)
