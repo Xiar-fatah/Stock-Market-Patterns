@@ -21,13 +21,27 @@ class data:
         self.df_mean, self.df_std = self.normalize(self.data_tot) 
         
     def normalize(self,df):
-        # store the normalization constants
+        # store the standardize constants
         df = df.drop('date', 1) # Remove date
-        df = df.drop('5. volume', 1) # Remove volume
         return df.mean()[3], df.std()[3]
     
-    def fetch(self, csv_path):
-        return pd.read_csv(csv_path).iloc[::-1] # Read in the data and flip it
+    def fetch(self, csv_path):    
+        csv_data = pd.read_csv(csv_path)# Read in the data and flip it
+        Bool,i = True,0
+        while Bool:
+            if csv_data.iloc[i,0] == '2020-02-21':
+                csv_data = csv_data[i:]
+                Bool = False
+            i += 1
+            
+        Bool,i = True,len(csv_data)
+        while Bool:
+            if csv_data.iloc[i-1,0] == '2000-05-05':
+                csv_data = csv_data[:i]
+                Bool = False
+            i -= 1
+        return csv_data.iloc[::-1]# Read in the data and flip it
+
     
     def stock(self, df, start, end, window):
         if end == 'last':
@@ -36,11 +50,8 @@ class data:
         
     def roll(self, start, end, window, df):
         df = df.drop('date', 1) # Remove date
-        df = df.drop('5. volume', 1) # Remove volume
         if end == 'last':
             end = df.columns.shape[0]
-            print(end)
-            print(df.columns.shape)
         df = (df-df.mean())/df.std()
         data = [] # X
         close_arr = df['4. close'].tolist()
@@ -57,7 +68,6 @@ class data:
         
     def arr_tensor(self, x, y, shuffle):
         x, y = torch.Tensor(x), torch.Tensor(y)
-        print(x.shape, y.shape)
         tensor = torch.utils.data.TensorDataset(x,y)
         return torch.utils.data.DataLoader(tensor, batch_size=1,
                                                  shuffle = shuffle, num_workers=0)
@@ -66,8 +76,8 @@ class data:
         
         
         
-csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD_V2.csv'
-data = data(train_start = 0, train_end = 4000, test_start = 3980, test_end = 4999, window = 20, csv_path = csv)        
+csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD_V3.csv'
+data = data(train_start = 0, train_end = 4000, test_start = 3980, test_end = 'last', window = 20, csv_path = csv)        
         
         
         
