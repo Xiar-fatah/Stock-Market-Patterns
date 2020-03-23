@@ -13,9 +13,9 @@ train_data = data.data_tot # Note that the data is already reversed from the cla
 def nor_date(df):
     df = df.drop('date', 1) # Remove date
     df = df.drop('5. volume', 1) # Remove volume
-    mean, std = df.mean(), df.std()
-    df = (df-df.mean())/df.std() # Standarize, replacing df.mean() with mean gives error
-    return df, mean[3], std[3]
+    df = (df-df.mean())/df.std() # Standarize
+    print(df.mean())
+    return df, df.mean()[3], df.std()[3]
 
 train_data_stand, mean, std = nor_date(train_data)
 # %%
