@@ -5,8 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 class data:
     
-    def __init__(self, train_start, train_end, validation_start, validation_end,
-                 test_start, test_end, window, csv_path, shuffle_train = True, shuffle_test = False):
+    def __init__(self, train_start, train_end, validation_start, validation_end, test_start, test_end, window, csv_path, shuffle_train = True, shuffle_test = False):
         self.train_start, self.train_end = train_start, train_end
         self.test_start, self.test_end = test_start, test_end
         self.validation_start, self.validation_end = validation_start, validation_end
