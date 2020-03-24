@@ -5,19 +5,22 @@ from sklearn.preprocessing import MinMaxScaler
 
 class data:
     
-    def __init__(self, train_start, train_end, test_start, test_end, window, csv_path, shuffle_train = True, shuffle_test = False):
+    def __init__(self, train_start, train_end, validation_start, validation_end,
+                 test_start, test_end, window, csv_path, shuffle_train = True, shuffle_test = False):
         self.train_start, self.train_end = train_start, train_end
         self.test_start, self.test_end = test_start, test_end
-        self.validation_start, self.validation_end
+        self.validation_start, self.validation_end = validation_start, validation_end
         self.window = window
         self.csv_path = csv_path
         self.data_tot = self.fetch(self.csv_path)
         self.real = self.stock(self.data_tot, self.test_start, self.test_end,self.window)
         self.train_x, self.train_y = self.roll(self.train_start, self.train_end, self.window, self.data_tot)
+        self.validation_x, self.validation_y = self.roll(self.validation_start, self.validation_end, self.window, self.data_tot)
         self.test_x, self.test_y = self.roll(self.test_start, self.test_end, self.window, self.data_tot)
         self.shuffle_train = shuffle_train
         self.shuffle_test = shuffle_test
         self.trainloader = self.arr_tensor(self.train_x, self.train_y, self.shuffle_train)
+        self.validationloader = self.arr_tensor(self.validation_x, self.validation_y, self.shuffle_train)
         self.testloader = self.arr_tensor(self.test_x, self.test_y, self.shuffle_test)
         self.df_mean, self.df_std = self.normalize(self.data_tot) 
         
@@ -52,17 +55,18 @@ class data:
     def roll(self, start, end, window, df):
         df = df.drop('date', 1) # Remove date
         if end == 'last':
-            end = df.columns.shape[0]
+            end = len(df) # length of rows
         df = (df-df.mean())/df.std()
         data = [] # X
         close_arr = df['4. close'].tolist()
         labels = close_arr[start + window:end] # Y
         start = start + window # Begins at the first 20 elements
-
         for i in range(start, end):
             temp = []
-            for col in range(0, len(df.columns)): # (5004,16)
-                col_arr = df.iloc[:,col].tolist()    
+            for col in range(0, len(df.columns)): 
+                col_arr = df.iloc[:,col].tolist()
+                if len(col_arr) != 20: # Precautions if the data does not satisfy len(data) % 20 
+                    break
                 temp.append(np.reshape(col_arr[i-window:i], window))
             data.append(np.transpose(temp))
         return np.array(data), np.array(labels)
@@ -78,7 +82,8 @@ class data:
         
         
 csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD_V3.csv'
-data = data(train_start = 0, train_end = 4000, test_start = 3980, test_end = 'last', window = 20, csv_path = csv)        
+data = data(train_start = 0, train_end = 4000, validation_start = 3980, validation_end = 4500,
+            test_start = 4480, test_end = 'last', window = 20, csv_path = csv)        
         
         
         
