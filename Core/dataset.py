@@ -4,7 +4,7 @@ import pandas as pd
 
 class data:
     
-    def __init__(self, train_start, train_end, validation_start, validation_end, test_start, test_end, window, csv_path, shuffle_train = True, shuffle_test = False):
+    def __init__(self, train_start, train_end, validation_start, validation_end, test_start, test_end, window, csv_path):
         self.train_start, self.train_end = train_start, train_end
         self.test_start, self.test_end = test_start, test_end
         self.validation_start, self.validation_end = validation_start, validation_end
@@ -15,8 +15,8 @@ class data:
         self.train_x, self.train_y = self.roll(self.train_start, self.train_end, self.window, self.data_tot)
         self.validation_x, self.validation_y = self.roll(self.validation_start, self.validation_end, self.window, self.data_tot)
         self.test_x, self.test_y = self.roll(self.test_start, self.test_end, self.window, self.data_tot)
-        self.shuffle_train = shuffle_train
-        self.shuffle_test = shuffle_test
+        self.shuffle_train = True
+        self.shuffle_test = False
         self.trainloader = self.arr_tensor(self.train_x, self.train_y, self.shuffle_train)
         self.validationloader = self.arr_tensor(self.validation_x, self.validation_y, self.shuffle_train)
         self.testloader = self.arr_tensor(self.test_x, self.test_y, self.shuffle_test)
@@ -79,9 +79,9 @@ class data:
         
         
         
-csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD_V3.csv'
-data = data(train_start = 0, train_end = 4000, validation_start = 3980, validation_end = 4500,
-            test_start = 4480, test_end = 'last', window = 20, csv_path = csv)        
+#csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD_V3.csv'
+#data = data(train_start = 0, train_end = 4000, validation_start = 3980, validation_end = 4500,
+#            test_start = 4480, test_end = 'last', window = 20, csv_path = csv)        
         
         
         
