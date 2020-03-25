@@ -63,13 +63,12 @@ class data:
             temp = []
             for col in range(0, len(df.columns)): 
                 col_arr = df.iloc[:,col].tolist()
-                if len(col_arr) != 20: # Precautions if the data does not satisfy len(data) % 20 
-                    break
                 temp.append(np.reshape(col_arr[i-window:i], window))
             data.append(np.transpose(temp))
         return np.array(data), np.array(labels)
         
     def arr_tensor(self, x, y, shuffle):
+        print(x.shape)
         x, y = torch.Tensor(x), torch.Tensor(y)
         tensor = torch.utils.data.TensorDataset(x,y)
         return torch.utils.data.DataLoader(tensor, batch_size=1,
@@ -79,9 +78,9 @@ class data:
         
         
         
-#csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD_V3.csv'
-#data = data(train_start = 0, train_end = 4000, validation_start = 3980, validation_end = 4500,
-#            test_start = 4480, test_end = 'last', window = 20, csv_path = csv)        
+csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD_V3.csv'
+data = data(train_start = 0, train_end = 4000, validation_start = 3980, validation_end = 4500,
+            test_start = 4480, test_end = 'last', window = 20, csv_path = csv)        
         
         
         
