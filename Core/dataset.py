@@ -28,21 +28,21 @@ class data:
         return df.mean()[3], df.std()[3]
     
     def fetch(self, csv_path):    
-        csv_data = pd.read_csv(csv_path)# Read in the data and flip it
-        Bool,i = True,0
-        while Bool:
-            if csv_data.iloc[i,0] == '2020-02-21':
-                csv_data = csv_data[i:]
-                Bool = False
-            i += 1
+        # csv_data = pd.read_csv(csv_path)# Read in the data and flip it
+        # Bool,i = True,0
+        # while Bool:
+        #     if csv_data.iloc[i,0] == '2020-02-21':
+        #         csv_data = csv_data[i:]
+        #         Bool = False
+        #     i += 1
             
-        Bool,i = True,len(csv_data)
-        while Bool:
-            if csv_data.iloc[i-1,0] == '2000-05-05':
-                csv_data = csv_data[:i]
-                Bool = False
-            i -= 1
-        return csv_data.iloc[::-1]# Read in the data and flip it
+        # Bool,i = True,len(csv_data)
+        # while Bool:
+        #     if csv_data.iloc[i-1,0] == '2000-05-05':
+        #         csv_data = csv_data[:i]
+        #         Bool = False
+        #     i -= 1
+        return pd.read_csv(csv_path).iloc[::-1]# Read in the data and flip it
 
     
     def stock(self, df, start, end, window):
