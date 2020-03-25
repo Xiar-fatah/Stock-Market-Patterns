@@ -68,7 +68,6 @@ class data:
         return np.array(data), np.array(labels)
         
     def arr_tensor(self, x, y, shuffle):
-        print(x.shape)
         x, y = torch.Tensor(x), torch.Tensor(y)
         tensor = torch.utils.data.TensorDataset(x,y)
         return torch.utils.data.DataLoader(tensor, batch_size=1,
