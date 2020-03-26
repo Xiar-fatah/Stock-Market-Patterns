@@ -5,16 +5,16 @@ import matplotlib.pyplot as plt
 # %%
 
 #Import data
-csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD_V2.csv'
-data = data_class.data(train_start = 0, train_end = 4000, test_start = 3980, test_end = 'last', window = 20, csv_path = csv)
-train_data = data.data_tot # Note that the data is already reversed from the class
+csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD.csv'
+train_data = pd.read_csv(csv)
 # %%
 #Standarize data and remove dates
 def nor_date(df):
     df = df.drop('date', 1) # Remove date
-    df = df.drop('5. volume', 1) # Remove volume
-    df = (df-df.mean())/df.std() # Standarize
+    df = df.drop('Unnamed: 0', 1)
     print(df.mean())
+
+    df = (df-df.mean())/df.std() # Standarize
     return df, df.mean()[3], df.std()[3]
 
 train_data_stand, mean, std = nor_date(train_data)
@@ -34,7 +34,7 @@ components = pca.transform(train_data_stand)
 
 train_PCA = pca.inverse_transform(components)
 
-
+train_PCA_df = pd.DataFrame(train_PCA)
 # %%
 # Create a multivariate rolling window
 import torch 
