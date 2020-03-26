@@ -77,9 +77,9 @@ class data:
         
         
         
-csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD_V3.csv'
-data = data(train_start = 0, train_end = 4000, validation_start = 3980, validation_end = 4500,
-            test_start = 4480, test_end = 'last', window = 20, csv_path = csv)        
+#csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD.csv'
+#data = data(train_start = 0, train_end = 4000, validation_start = 3980, validation_end = 4500,
+#            test_start = 4480, test_end = 'last', window = 20, csv_path = csv)        
         
         
         
