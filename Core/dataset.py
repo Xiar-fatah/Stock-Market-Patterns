@@ -33,7 +33,7 @@ class data:
     
     def stock(self, df, start, end, window):
         if end == 'last':
-            end = df.columns.shape[0]
+            end = len(df)
         return df['4. close'].tolist()[start + window:end]
         
     def roll(self, start, end, window, df):
@@ -55,6 +55,7 @@ class data:
         
     def arr_tensor(self, x, y, shuffle):
         x, y = torch.Tensor(x), torch.Tensor(y)
+
         tensor = torch.utils.data.TensorDataset(x,y)
         return torch.utils.data.DataLoader(tensor, batch_size=1,
                                                  shuffle = shuffle, num_workers=0)
@@ -66,9 +67,9 @@ class data:
 #csv = 'https://raw.githubusercontent.com/Xiar-fatah/Stock-Market-Patterns/ADD_PCA/Core/Financial_Data/FORD.csv'
 #data = data(train_start = 0, train_end = 4000, validation_start = 3980, validation_end = 4500,
 #            test_start = 4480, test_end = 'last', window = 20, csv_path = csv)        
-#        
-#        
-#        
+        
+        
+        
         
         
         
